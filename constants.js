@@ -1,4 +1,4 @@
-const DB_URL = 'mongodb://localhost:27017/mydb';
+
 const PORT = 3000;
 
 const status_codes = {
