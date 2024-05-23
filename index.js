@@ -1,30 +1,22 @@
-const env = require('dotenv').config();
+const dotenv = require('dotenv');
 const express = require('express');
-const mongoose = require('mongoose');
 const app = express();
-const {DBconnect} = require('./config/DB');
-const {PORT} = require('./constants');
+const connectDB = require('./config/DB');
+const { PORT } = require('./constants');
 const path = require('path');
-const {status} = require('./constants');
+const authRoutes = require('./routes/authRoutes');
+const blogRoutes = require('./routes/blogRoutes');
+
+dotenv.config();
+connectDB();
 
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/api/auth', authRoutes);
+app.use('/api/blogs', blogRoutes);
 
-DBconnect().then(()=>{
-    console.log('Database connected');
-
-}).catch((err)=>{
-    console.log(err);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
-
-
-app.get('/',(res,req)=>{
-    res.status(status.OK).send('Hello World');
-
-})
-
-app.listen(PORT, ()=>{
-    console.log(`Server is running on port ${PORT}`);
-})
